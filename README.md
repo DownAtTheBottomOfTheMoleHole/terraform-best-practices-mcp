@@ -26,7 +26,13 @@ An MCP server that helps teams produce better Terraform by combining:
 ### Interactive Analysis & Reporting Tools
 
 - `analyze_terraform_code` — Analyze code structure, modularity, and best practices
+- `analyze_terraform_performance` — Analyze Terraform runtime/performance bottlenecks and optimization opportunities
+- `analyze_state_management` — Assess backend state strategy and collaboration safety
 - `generate_cost_report` — Generate cost analysis with optimization suggestions
+- `generate_terraform_module_docs` — Generate module documentation markdown from Terraform code
+- `recommend_terraform_modules` — Recommend reusable Terraform modules from detected code patterns
+- `suggest_terraform_architecture` — Suggest architecture patterns for multi-environment and multi-region estates
+- `suggest_terraform_testing_strategy` — Recommend CI-driven Terraform testing strategy by risk profile
 - `suggest_security_hardening` — Provide security hardening recommendations
 - `generate_compliance_summary` — Create compliance reports from scan outputs
 

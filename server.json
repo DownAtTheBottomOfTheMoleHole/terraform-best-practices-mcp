@@ -62,8 +62,32 @@
       "description": "Analyze Terraform code structure, modularity, variables, and best practices"
     },
     {
+      "name": "analyze_terraform_performance",
+      "description": "Analyze Terraform code for performance risks and optimization opportunities"
+    },
+    {
+      "name": "analyze_state_management",
+      "description": "Assess Terraform backend/state strategy and recommend safer state management patterns"
+    },
+    {
       "name": "generate_cost_report",
       "description": "Generate a comprehensive cost report from infracost output with optimization suggestions"
+    },
+    {
+      "name": "generate_terraform_module_docs",
+      "description": "Generate markdown documentation for Terraform modules from source code"
+    },
+    {
+      "name": "recommend_terraform_modules",
+      "description": "Recommend Terraform Registry modules based on code patterns and deployment intent"
+    },
+    {
+      "name": "suggest_terraform_architecture",
+      "description": "Suggest Terraform architecture and repository patterns for multi-environment infrastructure"
+    },
+    {
+      "name": "suggest_terraform_testing_strategy",
+      "description": "Recommend Terraform testing strategy and CI stages based on risk and change cadence"
     },
     {
       "name": "suggest_security_hardening",
