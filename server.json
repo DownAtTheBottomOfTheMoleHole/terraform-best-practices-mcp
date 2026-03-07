@@ -1,0 +1,62 @@
+{
+  "name": "terraform-best-practices",
+  "registry_name": "DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Terraform best-practice guidance, linting, security scanning, and cost insights",
+  "author": "Carl Dawson",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp"
+  },
+  "homepage": "https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp",
+  "keywords": [
+    "mcp",
+    "terraform",
+    "infracost",
+    "tflint",
+    "checkov",
+    "trivy",
+    "kics",
+    "azure",
+    "aws",
+    "gcp"
+  ],
+  "entry": "dist/index.js",
+  "transport": "stdio",
+  "tools": [
+    {
+      "name": "run_tflint",
+      "description": "Run tflint against a Terraform project directory"
+    },
+    {
+      "name": "run_checkov",
+      "description": "Run checkov over a Terraform directory"
+    },
+    {
+      "name": "run_trivy",
+      "description": "Run trivy config scanning against Terraform code"
+    },
+    {
+      "name": "run_kics",
+      "description": "Run kics IaC scanning against Terraform code"
+    },
+    {
+      "name": "run_infracost",
+      "description": "Run infracost breakdown for a Terraform directory"
+    },
+    {
+      "name": "fetch_terraform_best_practices",
+      "description": "Fetch Terraform best-practice guidance from terraform-best-practices.com"
+    },
+    {
+      "name": "fetch_provider_best_practices",
+      "description": "Fetch Terraform best practices for Azure, AWS, or GCP"
+    },
+    {
+      "name": "fetch_terraform_registry_guidance",
+      "description": "Fetch Terraform Registry guidance for providers, resources, and modules"
+    }
+  ],
+  "nodejs": ">=24.0.0"
+}

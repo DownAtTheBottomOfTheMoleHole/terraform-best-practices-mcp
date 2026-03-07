@@ -2,3 +2,14 @@ node_modules/
 dist/
 coverage/
 .vscode/*.log
+.vscode/settings.json
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.log
+
+# Local development files (not for public repo)
+.copilot-instructions.md
+.github/copilot-instructions.md
+*.instructions.md

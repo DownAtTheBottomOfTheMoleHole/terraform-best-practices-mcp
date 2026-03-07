@@ -20,7 +20,7 @@ An MCP server that helps teams produce better Terraform by combining:
 
 ## Prerequisites
 
-- Node.js 20+
+- Node.js 24+
 - Optional CLIs available on `PATH` for command tools:
   - `tflint`
   - `checkov`
@@ -50,6 +50,18 @@ npm run build
 npm start
 ```
 
+## Publish
+
+This package is configured for npm as:
+
+- `@downatthebottomofthemolehole/terraform-best-practices-mcp-server`
+
+To publish:
+
+```bash
+npm publish --access public
+```
+
 ## MCP Configuration
 
 This project includes `.vscode/mcp.json`:
@@ -65,6 +77,11 @@ This project includes `.vscode/mcp.json`:
   }
 }
 ```
+
+Registry metadata files used by your other MCP repos are also included:
+
+- `mcp.json`
+- `server.json`
 
 ## References
 
