@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json.schemastore.org/renovate.json",
+  "extends": [
+    "config:recommended",
+    ":enableVulnerabilityAlerts",
+    ":semanticCommitTypeAll(chore)",
+    ":ignoreModulesAndTests"
+  ],
+  "description": "Renovate configuration for Terraform Best Practices MCP Server",
+  "timezone": "UTC",
+  "automerge": false,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "minimumReleaseAge": "1 day",
+  "internalChecksFilter": "flexible",
+  "packageRules": [
+    {
+      "description": "Label updates by type",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false,
+      "labels": [
+        "breaking-change"
+      ],
+      "assignees": [
+        "@downatthebottomofthemolehole"
+      ],
+      "semanticCommitType": "chore",
+      "additionalBranchPrefix": "{{semanticCommitType}}-"
+    },
+    {
+      "description": "Auto-merge minor and patch updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Security updates require review",
+      "matchDatasources": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "groupName": "security",
+      "schedule": [
+        "before 3am on Monday"
+      ],
+      "automerge": false
+    }
+  ]
+}

@@ -1,0 +1,374 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "[vV]*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (without v prefix). Required for manual runs on branches."
+        required: false
+        type: string
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  packages: read
+  id-token: write
+
+jobs:
+  version-and-tag:
+    if: github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]' && (github.event_name != 'workflow_dispatch' || inputs.version == '') && (github.event_name != 'push' || contains(github.event.head_commit.message, 'Merge pull request'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    outputs:
+      should_release: ${{ steps.release_check.outputs.should_release }}
+      computed_version: ${{ steps.release_check.outputs.computed_version }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          token: ${{ github.token }}
+
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 24.x
+
+      - uses: gittools/actions/gitversion/setup@71a79f7569b981036febd9ce5870f87e069928e7 # v4.3.3
+        with:
+          versionSpec: "6.6.x"
+
+      - uses: gittools/actions/gitversion/execute@71a79f7569b981036febd9ce5870f87e069928e7 # v4.3.3
+        id: gitversion
+        with:
+          configFilePath: GitVersion.yml
+
+      - name: Decide whether to release
+        id: release_check
+        run: |
+          VERSION="${{ steps.gitversion.outputs.majorMinorPatch }}"
+          CURRENT_VERSION="$(node -p "require('./package.json').version")"
+
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Computed version '$VERSION' is not strict SemVer (x.y.z)."
+            exit 1
+          fi
+
+          echo "computed_version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "current_version=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+
+          if [[ "$VERSION" == "$CURRENT_VERSION" ]]; then
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            echo "reason=version-unchanged" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git ls-remote --tags origin "refs/tags/v$VERSION" | grep -q "refs/tags/v$VERSION$"; then
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            echo "reason=tag-exists" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "should_release=true" >> "$GITHUB_OUTPUT"
+          echo "reason=release-required" >> "$GITHUB_OUTPUT"
+
+      - name: Update version files
+        if: steps.release_check.outputs.should_release == 'true'
+        env:
+          VERSION: ${{ steps.release_check.outputs.computed_version }}
+        run: |
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          node -e "const fs = require('fs'); const p = 'server.json'; const data = JSON.parse(fs.readFileSync(p, 'utf8')); data.version = process.env.VERSION; if (Array.isArray(data.packages)) { data.packages = data.packages.map((pkg) => ({ ...pkg, version: process.env.VERSION })); } fs.writeFileSync(p, JSON.stringify(data, null, 2) + '\n');"
+          node -e "const fs = require('fs'); const p = 'mcp.json'; const data = JSON.parse(fs.readFileSync(p, 'utf8')); data.version = process.env.VERSION; fs.writeFileSync(p, JSON.stringify(data, null, 2) + '\n');"
+
+      - name: Commit version bump
+        if: steps.release_check.outputs.should_release == 'true'
+        env:
+          VERSION: ${{ steps.release_check.outputs.computed_version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json server.json mcp.json
+          git commit -m "chore(release): v$VERSION"
+
+      - name: Push release commit and tag
+        if: steps.release_check.outputs.should_release == 'true'
+        env:
+          VERSION: ${{ steps.release_check.outputs.computed_version }}
+        run: |
+          git tag "v$VERSION"
+          git push origin HEAD:main
+          git push origin "v$VERSION"
+
+      - name: Release skipped summary
+        if: steps.release_check.outputs.should_release != 'true'
+        run: |
+          echo "ℹ️ Release skipped: ${{ steps.release_check.outputs.reason }}"
+          echo "Current version: ${{ steps.release_check.outputs.current_version }}"
+          echo "Computed version: ${{ steps.release_check.outputs.computed_version }}"
+
+  test-and-build:
+    needs: version-and-tag
+    if: |
+      always() && (
+        (startsWith(github.ref, 'refs/tags/') && github.actor != 'github-actions[bot]') ||
+        inputs.version != '' ||
+        needs.version-and-tag.outputs.should_release == 'true'
+      )
+    runs-on: ubuntu-latest
+    name: Test, Build & Compliance
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - run: npm ci
+      - name: Check documentation links
+        run: npx --yes markdown-link-check -c .markdown-link-check.json README.md docs/*.md -q
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+      - name: Verify build artifacts
+        run: |
+          test -f dist/index.js && echo "✅ dist/index.js exists" || exit 1
+          test -f dist/index.d.ts && echo "✅ dist/index.d.ts exists" || exit 1
+
+  publish:
+    needs:
+      - version-and-tag
+      - test-and-build
+    if: |
+      always() &&
+      needs.test-and-build.result == 'success' && (
+        (startsWith(github.ref, 'refs/tags/') && github.actor != 'github-actions[bot]') ||
+        inputs.version != '' ||
+        needs.version-and-tag.outputs.should_release == 'true'
+      )
+    runs-on: ubuntu-latest
+    name: Publish to npm and MCP Registry
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Resolve release version
+        id: release_version
+        run: |
+          VERSION="${{ inputs.version }}"
+
+          if [[ -z "$VERSION" && "$GITHUB_REF_TYPE" == "tag" ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+
+          if [[ -z "$VERSION" && "${{ needs.version-and-tag.outputs.should_release }}" == "true" ]]; then
+            VERSION="${{ needs.version-and-tag.outputs.computed_version }}"
+          fi
+
+          if [[ -z "$VERSION" ]]; then
+            echo "::error::Unable to resolve release version from inputs, tag, or version-and-tag output."
+            exit 1
+          fi
+
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Version '$VERSION' must be strict SemVer in x.y.z format."
+            exit 1
+          fi
+
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Sync version files
+        env:
+          VERSION: ${{ steps.release_version.outputs.value }}
+        run: |
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          node -e "const fs = require('fs'); const p = 'server.json'; const data = JSON.parse(fs.readFileSync(p, 'utf8')); data.version = process.env.VERSION; if (Array.isArray(data.packages)) { data.packages = data.packages.map((pkg) => ({ ...pkg, version: process.env.VERSION })); } fs.writeFileSync(p, JSON.stringify(data, null, 2) + '\n');"
+          node -e "const fs = require('fs'); const p = 'mcp.json'; const data = JSON.parse(fs.readFileSync(p, 'utf8')); data.version = process.env.VERSION; fs.writeFileSync(p, JSON.stringify(data, null, 2) + '\n');"
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Check npm package version
+        id: npm_version_check
+        env:
+          PACKAGE_NAME: "@downatthebottomofthemolehole/terraform-best-practices-mcp-server"
+          VERSION: ${{ steps.release_version.outputs.value }}
+        run: |
+          if npm view "${PACKAGE_NAME}@${VERSION}" version >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish package to npm
+        if: steps.npm_version_check.outputs.exists != 'true'
+        run: npm publish --access public
+        env:
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Skip npm publish (already exists)
+        if: steps.npm_version_check.outputs.exists == 'true'
+        run: echo "ℹ️ npm package version already exists; skipping npm publish."
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate to MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Check MCP registry server version
+        id: mcp_version_check
+        env:
+          SERVER_NAME: io.github.DownAtTheBottomOfTheMoleHole/terraform-best-practices
+          VERSION: ${{ steps.release_version.outputs.value }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+
+          const outputPath = process.env.GITHUB_OUTPUT;
+          const serverName = process.env.SERVER_NAME;
+          const version = process.env.VERSION;
+
+          async function main() {
+            try {
+              const url = `https://registry.modelcontextprotocol.io/v0.1/servers?search=${encodeURIComponent(serverName)}`;
+              const response = await fetch(url);
+              const data = response.ok ? await response.json() : { servers: [] };
+              const servers = Array.isArray(data.servers) ? data.servers : [];
+              const exists = servers.some((entry) => {
+                const server = entry?.server;
+                return server?.name === serverName && server?.version === version;
+              });
+              fs.appendFileSync(outputPath, `exists=${exists ? 'true' : 'false'}\n`);
+            } catch {
+              fs.appendFileSync(outputPath, 'exists=false\n');
+            }
+          }
+
+          main();
+          NODE
+
+      - name: Publish server to MCP Registry
+        if: steps.mcp_version_check.outputs.exists != 'true'
+        run: ./mcp-publisher publish
+
+      - name: Skip MCP publish (already exists)
+        if: steps.mcp_version_check.outputs.exists == 'true'
+        run: echo "ℹ️ MCP registry version already exists; skipping MCP publish."
+
+      - name: Resolve previous release tag
+        id: previous_tag
+        env:
+          VERSION: ${{ steps.release_version.outputs.value }}
+        run: |
+          CURRENT_TAG="v$VERSION"
+          PREVIOUS_TAG="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | grep -v "^${CURRENT_TAG}$" | head -n 1 || true)"
+          echo "value=$PREVIOUS_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Generate rich public release notes
+        uses: actions/github-script@v8
+        env:
+          VERSION: ${{ steps.release_version.outputs.value }}
+          PREVIOUS_TAG: ${{ steps.previous_tag.outputs.value }}
+        with:
+          script: |
+            const fs = require('node:fs');
+
+            const version = process.env.VERSION;
+            const tagName = `v${version}`;
+            const previousTag = process.env.PREVIOUS_TAG || undefined;
+            const serverName = 'io.github.DownAtTheBottomOfTheMoleHole/terraform-best-practices';
+            const packageName = '@downatthebottomofthemolehole/terraform-best-practices-mcp-server';
+
+            const response = await github.rest.repos.generateReleaseNotes({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tagName,
+              target_commitish: context.sha,
+              ...(previousTag ? { previous_tag_name: previousTag } : {}),
+            });
+
+            const generated = (response.data.body || '').trim();
+
+            const intro = [
+              `## :rocket: Terraform Best Practices MCP Server ${tagName}`,
+              '',
+              previousTag
+                ? `Public release with improvements since ${previousTag}.`
+                : 'Public release for the Terraform Best Practices MCP Server.',
+              '',
+              '### :rocket: Quick Start',
+              '```bash',
+              `npx -y ${packageName}@${version}`,
+              '```',
+              '',
+              '### :robot: VS Code Copilot Chat Example',
+              '```text',
+              '@terraform-guidance analyze Terraform code from:',
+              '- terraformCode',
+              '- focusArea: modularity',
+              '```',
+              '',
+              '### :package: Distribution',
+              `- npm package: \`${packageName}@${version}\``,
+              `- MCP server name: \`${serverName}\``,
+              `- MCP registry search: https://registry.modelcontextprotocol.io/v0.1/servers?search=${encodeURIComponent(serverName)}`,
+            ];
+
+            const body = [
+              intro.join('\n'),
+              '',
+              generated || '- No categorized changes were generated for this release.',
+            ].join('\n');
+
+            fs.writeFileSync('release-notes.md', body, 'utf8');
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2.5.0
+        with:
+          tag_name: v${{ steps.release_version.outputs.value }}
+          name: v${{ steps.release_version.outputs.value }}
+          draft: false
+          prerelease: ${{ contains(steps.release_version.outputs.value, 'rc') || contains(steps.release_version.outputs.value, 'hotfix') }}
+          body_path: release-notes.md
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create deployment summary
+        if: success()
+        env:
+          VERSION: ${{ steps.release_version.outputs.value }}
+        run: |
+          echo "✅ Version: $VERSION"
+          echo "✅ Package published to npm: https://www.npmjs.com/package/@downatthebottomofthemolehole/terraform-best-practices-mcp-server"
+          echo "✅ Server published to MCP Registry: DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp"
