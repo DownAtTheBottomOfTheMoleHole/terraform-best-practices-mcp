@@ -56,6 +56,22 @@
     {
       "name": "fetch_terraform_registry_guidance",
       "description": "Fetch Terraform Registry guidance for providers, resources, and modules"
+    },
+    {
+      "name": "analyze_terraform_code",
+      "description": "Analyze Terraform code structure, modularity, variables, and best practices"
+    },
+    {
+      "name": "generate_cost_report",
+      "description": "Generate a comprehensive cost report from infracost output with optimization suggestions"
+    },
+    {
+      "name": "suggest_security_hardening",
+      "description": "Analyze security scan output and suggest hardening steps to improve infrastructure security"
+    },
+    {
+      "name": "generate_compliance_summary",
+      "description": "Generate a compliance summary report from multiple security scan outputs"
     }
   ],
   "nodejs": ">=24.0.0"

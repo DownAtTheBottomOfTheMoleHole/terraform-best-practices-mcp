@@ -9,14 +9,26 @@ An MCP server that helps teams produce better Terraform by combining:
 
 ## Tool Catalog
 
-- `run_tflint`
-- `run_checkov`
-- `run_trivy`
-- `run_kics`
-- `run_infracost`
-- `fetch_terraform_best_practices`
-- `fetch_provider_best_practices`
-- `fetch_terraform_registry_guidance`
+### CLI-Backed Analysis Tools
+
+- `run_tflint` — Lint Terraform code
+- `run_checkov` — Security and compliance scanning
+- `run_trivy` — Configuration scanning for vulnerabilities
+- `run_kics` — IaC scanning for security and compliance
+- `run_infracost` — Cloud cost estimation
+
+### Guidance & Best-Practice Tools
+
+- `fetch_terraform_best_practices` — Fetch curated Terraform best practices
+- `fetch_provider_best_practices` — Cloud provider (Azure/AWS/GCP) Terraform guidance
+- `fetch_terraform_registry_guidance` — Registry guidance for providers/resources/modules
+
+### Interactive Analysis & Reporting Tools
+
+- `analyze_terraform_code` — Analyze code structure, modularity, and best practices
+- `generate_cost_report` — Generate cost analysis with optimization suggestions
+- `suggest_security_hardening` — Provide security hardening recommendations
+- `generate_compliance_summary` — Create compliance reports from scan outputs
 
 ## Prerequisites
 
