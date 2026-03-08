@@ -13,7 +13,11 @@ enhancement:
 
 feature:
   - changed-files:
-      - any-glob-to-any-file: ["src/**/*.ts"]
+      - any-glob-to-any-file:
+          - "src/**/*.ts"
+          - "!src/tools/**/*.ts"
+          - "!src/lib/**/*.ts"
+          - "!src/index.ts"
 
 # Bug Fixes
 bug:
