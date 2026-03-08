@@ -4,7 +4,8 @@
     "config:recommended",
     ":enableVulnerabilityAlerts",
     ":semanticCommitTypeAll(chore)",
-    ":ignoreModulesAndTests"
+    ":ignoreModulesAndTests",
+    "helpers:pinGitHubActionDigests"
   ],
   "description": "Renovate configuration for Terraform Best Practices MCP Server",
   "timezone": "UTC",
@@ -76,9 +77,10 @@
     },
     {
       "groupName": "GitHub Actions",
-      "matchDatasources": [
-        "github-tags"
+      "matchManagers": [
+        "github-actions"
       ],
+      "pinDigests": true,
       "automerge": true,
       "automergeType": "pr",
       "automergeStrategy": "squash"
