@@ -3,19 +3,27 @@ changelog:
     - title: Breaking Changes 🚨
       labels:
         - breaking-change
+        - Semver Major
     - title: Features ✨
       labels:
         - enhancement
+        - Enhancement
         - feature
+        - Semver Minor
     - title: Bug Fixes 🐛
       labels:
         - bug
+        - Bug
+        - Hotfix
     - title: Documentation 📚
       labels:
         - documentation
+        - Documentation
         - docs
     - title: Maintenance 🔧
       labels:
         - maintenance
-        - dependencies
+        - Chore
+        - GitHub Actions
         - Renovate
+        - Semver Patch

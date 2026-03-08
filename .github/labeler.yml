@@ -7,7 +7,7 @@ breaking-change:
       - any-glob-to-any-file: ["src/index.ts", "src/lib/**/*.ts"]
 
 # Features
-enhancement:
+Enhancement:
   - changed-files:
       - any-glob-to-any-file: ["src/tools/**/*.ts"]
 
@@ -20,12 +20,12 @@ feature:
           - "!src/index.ts"
 
 # Bug Fixes
-bug:
+Bug:
   - changed-files:
       - any-glob-to-any-file: ["tests/**/*.ts"]
 
 # Documentation
-documentation:
+Documentation:
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.md"
@@ -49,9 +49,3 @@ maintenance:
           - ".mega-linter.yml"
           - "cspell.json"
 
-# Dependencies (alias used in release.yml)
-dependencies:
-  - changed-files:
-      - any-glob-to-any-file:
-          - "package.json"
-          - "package-lock.json"
