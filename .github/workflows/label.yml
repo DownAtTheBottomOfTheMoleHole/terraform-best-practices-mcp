@@ -1,0 +1,35 @@
+name: Label PR
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    name: Auto-label PR
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@9b3fc10c57b356dcf6e5b5d63cdc52f3bd88e11a # v5
+        with:
+          configuration-path: .github/labeler.yml
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  renovate-label:
+    runs-on: ubuntu-latest
+    name: Label Renovate PR
+    if: github.actor == 'renovate[bot]'
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@60a0ed5c524312ce9b056f268c37e3d5c8dd0d4b # v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['maintenance', 'dependencies'],
+            });
