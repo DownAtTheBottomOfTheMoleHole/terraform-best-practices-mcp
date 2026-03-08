@@ -27,42 +27,9 @@ jobs:
       - uses: actions/github-script@60a0ed5c524312ce9b056f268c37e3d5c8dd0d4b # v7
         with:
           script: |
-            const title = context.payload.pull_request.title.toLowerCase();
-            const branch = context.payload.pull_request.head.ref.toLowerCase();
-            let semverLabel = 'maintenance';
-            if (title.includes('major') || branch.includes('major')) {
-              semverLabel = 'breaking-change';
-            } else if (title.includes('minor') || branch.includes('minor')) {
-              semverLabel = 'feature';
-            }
-            const labelsToApply = ['Renovate', semverLabel];
-
-            // Ensure all labels exist before applying them
-            for (const label of labelsToApply) {
-              try {
-                await github.rest.issues.getLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: label,
-                });
-              } catch (e) {
-                const status = e.status ?? e.response?.status;
-                if (status === 404) {
-                  await github.rest.issues.createLabel({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    name: label,
-                    color: 'ededed',
-                  });
-                } else {
-                  throw e;
-                }
-              }
-            }
-
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              labels: labelsToApply,
+              labels: ['maintenance', 'dependencies'],
             });
