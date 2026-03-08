@@ -1,6 +1,6 @@
 {
   "name": "@downatthebottomofthemolehole/terraform-best-practices-mcp-server",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "mcpName": "io.github.DownAtTheBottomOfTheMoleHole/terraform-best-practices",
   "description": "MCP server for Terraform cost, lint, security, and cloud best-practice guidance.",
   "type": "module",

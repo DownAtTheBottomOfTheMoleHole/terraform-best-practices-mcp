@@ -1,7 +1,7 @@
 {
   "name": "terraform-best-practices",
   "registry_name": "DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "MCP server for Terraform best-practice guidance, linting, security scanning, and cost insights",
   "author": "Carl Dawson",
   "license": "MIT",
