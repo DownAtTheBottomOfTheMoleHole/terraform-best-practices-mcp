@@ -4,15 +4,13 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
-permissions:
-  contents: read
-  pull-requests: write
-  issues: write
-
 jobs:
   label:
     runs-on: ubuntu-latest
     name: Auto-label PR
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/labeler@9b3fc10c57b356dcf6e5b5d63cdc52f3bd88e11a # v5
         with:
@@ -23,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Label Renovate PR
     if: github.actor == 'renovate[bot]'
+    permissions:
+      pull-requests: write
+      issues: write
     steps:
       - uses: actions/github-script@60a0ed5c524312ce9b056f268c37e3d5c8dd0d4b # v7
         with:
