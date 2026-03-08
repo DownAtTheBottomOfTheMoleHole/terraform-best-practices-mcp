@@ -1,0 +1,49 @@
+# MegaLinter configuration for Terraform Best Practices MCP server
+# Reference: https://megalinter.io/latest/configuration/
+
+MEGALINTER_COMMENT: false
+MEGALINTER_COMMENT_PR_REQUEST_CHANGES: false
+GITHUB_COMMENT_PR_REQUEST_CHANGES: false
+
+ENABLE:
+  - MARKDOWN
+  - JSON
+  - YAML
+  - TYPESCRIPT
+  - BASH
+  - SPELL
+
+MARKDOWN_MARKDOWNLINT_DISABLED: false
+MARKDOWN_MARKDOWNLINT_FILTER_REGEX_EXCLUDE: |
+  \.github/(?:ISSUE_TEMPLATE|pull_request_template)\.md|LICENSE
+
+TYPESCRIPT_ES_TARGET: ES2022
+TYPESCRIPT_ESLINT_CONFIG_FILE: .eslintrc.cjs
+
+SPELL_CSPELL_CONFIG_FILE: cspell.json
+SPELL_CSPELL_FILE_EXTENSIONS:
+  - .ts
+  - .js
+  - .json
+  - .md
+  - .yaml
+  - .yml
+
+SPELL_CSPELL_DISABLE_ERRORS: true
+
+EXCLUDED_DIRECTORIES:
+  - node_modules
+  - dist
+  - coverage
+  - .git
+  - .vscode
+  - .tmp*
+
+REPORT_FOLDER: megalinter-reports
+CREATE_SARIF_REPORT: true
+CREATE_MARKDOWN_SUMMARY: true
+
+FAIL_IF_ERRORS: true
+FAIL_IF_WARNINGS: false
+
+LINTER_TIMEOUT: 60
