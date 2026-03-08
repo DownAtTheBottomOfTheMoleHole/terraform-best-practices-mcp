@@ -27,31 +27,92 @@
         "@downatthebottomofthemolehole"
       ],
       "semanticCommitType": "chore",
-      "additionalBranchPrefix": "{{semanticCommitType}}-"
+      "additionalBranchPrefix": "{{semanticCommitType}}-",
+      "commitMessageSuffix": " +semver: major"
     },
     {
-      "description": "Auto-merge minor and patch updates",
       "matchUpdateTypes": [
-        "minor",
-        "patch"
+        "minor"
+      ],
+      "labels": [
+        "feature"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash",
+      "semanticCommitType": "chore",
+      "commitMessageSuffix": " +semver: minor"
+    },
+    {
+      "matchUpdateTypes": [
+        "patch",
+        "digest"
+      ],
+      "labels": [
+        "maintenance"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash",
+      "semanticCommitType": "chore",
+      "commitMessageSuffix": " +semver: patch"
+    },
+    {
+      "groupName": "Node.js & Core Dependencies",
+      "matchDatasources": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "@modelcontextprotocol/**",
+        "typescript",
+        "tsx",
+        "@types/node"
+      ],
+      "automerge": false,
+      "schedule": [
+        "after 10pm on Sunday",
+        "after 10pm on Wednesday"
+      ]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchDatasources": [
+        "github-tags"
       ],
       "automerge": true,
       "automergeType": "pr",
       "automergeStrategy": "squash"
     },
     {
-      "description": "Security updates require review",
-      "matchDatasources": [
-        "npm"
+      "groupName": "DevDependencies",
+      "matchDepTypes": [
+        "devDependencies"
       ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "groupName": "security",
+      "automerge": false,
       "schedule": [
-        "before 3am on Monday"
-      ],
-      "automerge": false
+        "after 10pm on Sunday",
+        "after 10pm on Wednesday"
+      ]
     }
-  ]
+  ],
+  "postUpdateOptions": [
+    "npmDedupe",
+    "yarnDedupeHighest"
+  ],
+  "npm": {
+    "rangeStrategy": "bump"
+  },
+  "vulnerabilityAlerts": {
+    "assignees": [
+      "@downatthebottomofthemolehole"
+    ],
+    "labels": [
+      "security"
+    ],
+    "automerge": false
+  },
+  "prCreation": "immediate",
+  "prConcurrentLimit": 3,
+  "semanticCommits": "enabled",
+  "semanticCommitScope": "deps"
 }
