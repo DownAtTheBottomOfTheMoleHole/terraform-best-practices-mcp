@@ -18,15 +18,21 @@ feature:
 # Bug Fixes
 bug:
   - changed-files:
-      - any-glob-to-any-file: ["tests/**/*.ts", "src/**/*.ts"]
+      - any-glob-to-any-file: ["tests/**/*.ts"]
 
 # Documentation
 documentation:
   - changed-files:
       - any-glob-to-any-file:
-          - "**.md"
+          - "**/*.md"
           - "docs/**"
-          - ".github/**"
+
+# Docs (alias used in release.yml)
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
 
 # Maintenance & Dependencies
 maintenance:
@@ -41,3 +47,10 @@ maintenance:
           - ".github/workflows/**"
           - ".mega-linter.yml"
           - "cspell.json"
+
+# Dependencies (alias used in release.yml)
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"
