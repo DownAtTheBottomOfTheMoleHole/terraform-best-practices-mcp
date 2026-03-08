@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Auto-label PR
     steps:
-      - uses: actions/labeler@v5
+      - uses: actions/labeler@9b3fc10c57b356dcf6e5b5d63cdc52f3bd88e11a # v5
         with:
           configuration-path: .github/labeler.yml
           repo-token: ${{ secrets.GITHUB_TOKEN }}
