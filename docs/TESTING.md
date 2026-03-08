@@ -85,6 +85,12 @@ Run the test suite:
 npm test
 ```
 
+Run tests with coverage:
+
+```bash
+npm run test:coverage
+```
+
 ## Lint and Build Validation
 
 ```bash
@@ -110,3 +116,9 @@ npm run build
 - Reinstall dependencies: `npm install`
 - Re-run checks: `npm run check`
 - Rebuild: `npm run build`
+
+### MegaLinter failures
+
+- Review `megalinter-reports/` artifacts for detailed findings
+- Fix reported markdown, yaml, spelling, or TypeScript issues
+- Re-run locally (if configured): `npx mega-linter-runner`
