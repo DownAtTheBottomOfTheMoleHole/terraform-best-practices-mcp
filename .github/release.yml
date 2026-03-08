@@ -18,3 +18,4 @@ changelog:
       labels:
         - maintenance
         - dependencies
+        - Renovate
