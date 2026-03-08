@@ -6,20 +6,16 @@ changelog:
         - Semver Major
     - title: Features ✨
       labels:
-        - enhancement
-        - Enhancement
         - feature
+        - Enhancement
         - Semver Minor
     - title: Bug Fixes 🐛
       labels:
-        - bug
         - Bug
         - Hotfix
     - title: Documentation 📚
       labels:
-        - documentation
         - Documentation
-        - docs
     - title: Maintenance 🔧
       labels:
         - maintenance
