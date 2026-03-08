@@ -33,7 +33,7 @@ jobs:
             if (title.includes('major') || branch.includes('major')) {
               semverLabel = 'breaking-change';
             } else if (title.includes('minor') || branch.includes('minor')) {
-              semverLabel = 'enhancement';
+              semverLabel = 'feature';
             }
             const labelsToApply = ['Renovate', semverLabel];
 
