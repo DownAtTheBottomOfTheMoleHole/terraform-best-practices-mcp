@@ -4,40 +4,40 @@
 # Breaking Changes
 breaking-change:
   - changed-files:
-      - any-glob-to-any-file: ['src/index.ts', 'src/lib/**/*.ts']
+      - any-glob-to-any-file: ["src/index.ts", "src/lib/**/*.ts"]
 
 # Features
 enhancement:
   - changed-files:
-      - any-glob-to-any-file: ['src/tools/**/*.ts']
+      - any-glob-to-any-file: ["src/tools/**/*.ts"]
 
 feature:
   - changed-files:
-      - any-glob-to-any-file: ['src/**/*.ts']
+      - any-glob-to-any-file: ["src/**/*.ts"]
 
 # Bug Fixes
 bug:
   - changed-files:
-      - any-glob-to-any-file: ['tests/**/*.ts', 'src/**/*.ts']
+      - any-glob-to-any-file: ["tests/**/*.ts", "src/**/*.ts"]
 
 # Documentation
 documentation:
   - changed-files:
       - any-glob-to-any-file:
-          - '**.md'
-          - 'docs/**'
-          - '.github/**'
+          - "**.md"
+          - "docs/**"
+          - ".github/**"
 
 # Maintenance & Dependencies
 maintenance:
   - changed-files:
       - any-glob-to-any-file:
-          - 'package.json'
-          - 'tsconfig.json'
-          - '.eslintrc.json'
-          - '.prettier*'
-          - '.git*'
-          - 'renovate.json'
-          - '.github/workflows/**'
-          - '.mega-linter.yml'
-          - 'cspell.json'
+          - "package.json"
+          - "tsconfig.json"
+          - ".eslintrc.json"
+          - ".prettier*"
+          - ".git*"
+          - "renovate.json"
+          - ".github/workflows/**"
+          - ".mega-linter.yml"
+          - "cspell.json"
