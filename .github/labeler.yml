@@ -27,12 +27,7 @@ documentation:
           - "**/*.md"
           - "docs/**"
 
-# Docs (alias used in release.yml)
-docs:
-  - changed-files:
-      - any-glob-to-any-file:
-          - "**/*.md"
-          - "docs/**"
+# (Alias `docs` is handled in release.yml; no separate auto-label configuration needed here.)
 
 # Maintenance & Dependencies
 maintenance:
