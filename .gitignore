@@ -1,15 +1,29 @@
 node_modules/
 dist/
-coverage/
-.vscode/*.log
-.vscode/settings.json
+*.log
+megalinter-reports/
+.DS_Store
+
+# Environment variables
 .env
 .env.local
 .env.*.local
-.DS_Store
-*.log
 
-# Local development files (not for public repo)
-.copilot-instructions.md
+# IDE & editor
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# Internal documentation (not for public distribution)
 .github/copilot-instructions.md
-*.instructions.md
+
+# Test artifacts
+coverage/
+.nyc_output/
+src/.test-reports/
+
+# Temporary files
+.tmp*
+*.tmp
