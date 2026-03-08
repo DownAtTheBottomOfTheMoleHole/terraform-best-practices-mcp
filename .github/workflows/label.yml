@@ -29,7 +29,7 @@ jobs:
             const labels = ['Renovate', 'maintenance'];
 
             // Parse PR title to determine semantic version label
-            const title = context.payload.pull_request.title;
+            const title = context.payload.pull_request.title.toLowerCase();
             if (title.includes('major') || title.includes('major version')) {
               labels.push('Semver Major');
             } else if (title.includes('minor') || title.includes('minor version')) {
