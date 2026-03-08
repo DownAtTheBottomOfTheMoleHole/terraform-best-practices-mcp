@@ -85,7 +85,7 @@ jobs:
           sarif_file: megalinter-reports/sarif
 
   version-and-tag:
-    if: github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]' && (github.event_name != 'workflow_dispatch' || inputs.version == '') && (github.event_name != 'push' || contains(github.event.head_commit.message, 'Merge pull request'))
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: write
