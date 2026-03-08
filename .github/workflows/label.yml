@@ -27,22 +27,31 @@ jobs:
       - uses: actions/github-script@60a0ed5c524312ce9b056f268c37e3d5c8dd0d4b # v7
         with:
           script: |
-            const labels = ['Renovate', 'maintenance'];
+            const labelsToApply = ['Renovate', 'maintenance'];
 
-            // Parse PR title to determine semantic version label
-            const title = context.payload.pull_request.title.toLowerCase();
-            if (title.includes('major') || title.includes('major version')) {
-              labels.push('Semver Major');
-            } else if (title.includes('minor') || title.includes('minor version')) {
-              labels.push('Semver Minor');
-            } else {
-              // Default to patch for dependency updates
-              labels.push('Semver Patch');
+            // Ensure all labels exist before applying them
+            for (const label of labelsToApply) {
+              try {
+                await github.rest.issues.getLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label,
+                });
+              } catch (e) {
+                if ((e.status ?? e.response?.status) === 404) {
+                  await github.rest.issues.createLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: label,
+                    color: 'ededed',
+                  });
+                }
+              }
             }
 
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              labels: labels,
+              labels: labelsToApply,
             });
