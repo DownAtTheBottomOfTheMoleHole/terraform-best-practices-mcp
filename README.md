@@ -101,6 +101,14 @@ Registry metadata files used by your other MCP repos are also included:
 - `mcp.json`
 - `server.json`
 
+## Maintainer Documentation
+
+- [Publishing Guide](docs/PUBLISHING.md)
+- [Maintainers Guide](docs/MAINTAINERS.md)
+- [Testing Guide](docs/TESTING.md)
+- [Pre-commit Setup](docs/PRE_COMMIT_SETUP.md)
+- [GitHub PAT Setup](docs/GITHUB_PAT_SETUP.md)
+
 ## References
 
 - [MCP org](https://github.com/modelcontextprotocol)
