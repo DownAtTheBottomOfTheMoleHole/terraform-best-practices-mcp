@@ -12,7 +12,7 @@ This document describes how to configure automated publishing to npm and the MCP
 
 ### Step 1: Configure npm Trusted Publishing
 
-1. Sign in to [npmjs.com](https://www.npmjs.com/).
+1. Sign in to npm and review account access from the [npm documentation portal](https://docs.npmjs.com/).
 2. Open your package settings for `@downatthebottomofthemolehole/terraform-best-practices-mcp-server`.
 3. Go to **Trusted publishers** and add a new GitHub Actions publisher.
 4. Set:
