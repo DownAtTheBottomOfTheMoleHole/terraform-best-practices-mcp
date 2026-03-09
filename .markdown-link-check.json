@@ -5,6 +5,9 @@
     },
     {
       "pattern": "^https://github.com/.+/settings"
+    },
+    {
+      "pattern": "^https://www.npmjs.com/package/@downatthebottomofthemolehole/terraform-best-practices-mcp-server$"
     }
   ],
   "timeout": "20s",

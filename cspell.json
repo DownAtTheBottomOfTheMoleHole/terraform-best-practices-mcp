@@ -48,6 +48,8 @@
     "formatters",
     "gittools",
     "GitVersion",
+    "labeler",
+    "vars",
     "hadolint",
     "heredoc",
     "htaccess",

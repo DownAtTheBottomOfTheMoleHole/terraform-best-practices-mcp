@@ -31,8 +31,6 @@ Documentation:
           - "**/*.md"
           - "docs/**"
 
-# (Alias `docs` is handled in release.yml; no separate auto-label configuration needed here.)
-
 # Maintenance & Dependencies
 maintenance:
   - changed-files:
