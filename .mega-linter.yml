@@ -1,3 +1,6 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/megalinter/megalinter/main/megalinter/descriptors/schemas/megalinter-configuration.jsonschema.json
+# Validation disabled - schema is outdated and flags valid properties as errors
+# yaml-language-server: disable
 # MegaLinter configuration for Terraform Best Practices MCP server
 # Reference: https://megalinter.io/latest/configuration/
 

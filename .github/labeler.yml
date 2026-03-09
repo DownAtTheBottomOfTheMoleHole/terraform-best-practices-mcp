@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://www.schemastore.org/pull-request-labeler-5.json
 # Label PRs automatically based on changed files
 # Mapped to release.yml changelog categories for better release notes
 

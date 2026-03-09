@@ -4,10 +4,10 @@
       "pattern": "^https://registry.modelcontextprotocol.io"
     },
     {
-      "pattern": "^https://github.com/.+/settings"
+      "pattern": "^https://github\\.com/.+/settings"
     },
     {
-      "pattern": "^https://www.npmjs.com/package/@downatthebottomofthemolehole/terraform-best-practices-mcp-server$"
+      "pattern": "^https://www\\.npmjs\\.com/package/@"
     }
   ],
   "timeout": "20s",
