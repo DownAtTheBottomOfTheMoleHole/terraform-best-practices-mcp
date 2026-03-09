@@ -2,7 +2,7 @@
 name: Feature Request
 about: Suggest an idea for the Terraform Best Practices MCP Server
 title: "[FEATURE] "
-labels: enhancement
+labels: Enhancement
 assignees: ""
 ---
 
