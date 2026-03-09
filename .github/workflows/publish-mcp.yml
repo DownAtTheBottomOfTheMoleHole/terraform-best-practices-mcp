@@ -81,15 +81,15 @@ jobs:
       - name: Consolidate SARIF reports
         if: success() || failure()
         run: |
-          mkdir -p megalinter-reports/sarif
-          find megalinter-reports -maxdepth 1 -name '*.sarif' -exec cp {} megalinter-reports/sarif/ \;
+          mkdir -p sarif-upload
+          find megalinter-reports -maxdepth 1 -name '*.sarif' -exec cp {} sarif-upload/ \; 2>/dev/null || true
 
       - name: Upload MegaLinter SARIF
         if: success() || failure()
         continue-on-error: true
         uses: github/codeql-action/upload-sarif@0d579ffd059c29b07949a3cce3983f0780820c98 # v4
         with:
-          sarif_file: megalinter-reports/sarif
+          sarif_file: sarif-upload
 
   # Version determination and tag creation job
   # This runs on main branch pushes to determine if a new release is needed.

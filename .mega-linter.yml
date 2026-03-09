@@ -23,6 +23,9 @@ MARKDOWN_MARKDOWNLINT_DISABLED: false
 MARKDOWN_MARKDOWNLINT_FILTER_REGEX_EXCLUDE: |
   \.github/(?:ISSUE_TEMPLATE|pull_request_template)\.md|LICENSE
 
+# Avoid V8R schema mismatches for files with ambiguous/outdated external schemas.
+YAML_V8R_FILTER_REGEX_EXCLUDE: (\.mega-linter\.yml|GitVersion\.yml)
+
 TYPESCRIPT_ES_TARGET: ES2022
 TYPESCRIPT_ESLINT_CONFIG_FILE: .eslintrc.json
 
