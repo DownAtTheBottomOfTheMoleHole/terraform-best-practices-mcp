@@ -1,12 +1,12 @@
 # Terraform Best Practices MCP Server
 
-<!-- mcp-name: io.github.downatthebottomofthemolehole/terraform-best-practices -->
+<!-- mcp-name: io.github.DownAtTheBottomOfTheMoleHole/terraform-best-practices -->
 
 [![CI/Publish](https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/actions/workflows/publish-mcp.yml/badge.svg)](https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/actions/workflows/publish-mcp.yml)
 [![Coverage](https://codecov.io/github/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/graph/badge.svg?branch=main)](https://codecov.io/github/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp)
 [![npm](https://img.shields.io/npm/v/@downatthebottomofthemolehole/terraform-best-practices-mcp-server.svg)](https://www.npmjs.com/package/@downatthebottomofthemolehole/terraform-best-practices-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Node Version](https://img.shields.io/badge/node-%3E%3D24.0.0-brightgreen)](https://nodejs.org/)
+[![Node Version](https://img.shields.io/badge/node-%3E%3D24.14.0-brightgreen)](https://nodejs.org/)
 
 > **Note:** This is a community-maintained MCP server. It is not an official Model Context Protocol server from HashiCorp or any cloud provider.
 
@@ -320,7 +320,7 @@ Use these minimal prompts in Copilot Chat with `@tf-best-practices`. CLI tools d
 
 ### System Dependencies
 
-- Node.js `>=24.0.0`
+- Node.js `>=24.14.0`
 - npm (bundled with Node.js)
 - Optional CLIs available on `PATH` for command tools:
   - `tflint`

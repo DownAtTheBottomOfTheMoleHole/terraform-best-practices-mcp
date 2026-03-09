@@ -66,7 +66,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'schedule' }}
-          APPLY_FIXES: ${{ github.event_name == 'pull_request' && 'all' || 'none' }}
+          APPLY_FIXES: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && 'all' || 'none' }}
 
       - name: Upload MegaLinter reports
         if: success() || failure()
@@ -91,6 +91,11 @@ jobs:
         with:
           sarif_file: megalinter-reports/sarif
 
+  # Version determination and tag creation job
+  # This runs on main branch pushes to determine if a new release is needed.
+  # Note: Due to branch protection requiring PRs, this job only creates tags
+  # (not version file commits). The publish job regenerates version files from
+  # the tag before publishing, keeping the tag as the source of truth.
   version-and-tag:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
@@ -188,6 +193,7 @@ jobs:
       - name: Verify build artifacts
         run: |
           test -f dist/index.js && echo "✅ dist/index.js exists" || exit 1
+          test -f dist/index.d.ts && echo "✅ dist/index.d.ts exists" || exit 1
           test -d dist/tools && echo "✅ dist/tools exists" || exit 1
 
   publish:

@@ -82,7 +82,7 @@
       ],
       "pinDigests": true,
       "labels": [
-        "github-actions"
+        "GitHub Actions"
       ],
       "automerge": true,
       "automergeType": "pr",
@@ -94,7 +94,7 @@
         "devDependencies"
       ],
       "labels": [
-        "dependencies"
+        "maintenance"
       ],
       "automerge": false,
       "schedule": [
