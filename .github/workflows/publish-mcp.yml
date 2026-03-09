@@ -82,7 +82,7 @@ jobs:
         if: success() || failure()
         run: |
           mkdir -p sarif-upload
-          find megalinter-reports -maxdepth 1 -name '*.sarif' -exec cp {} sarif-upload/ \; 2>/dev/null || true
+          find megalinter-reports -name '*.sarif' -exec cp {} sarif-upload/ \; 2>/dev/null || true
 
       - name: Upload MegaLinter SARIF
         if: success() || failure()
