@@ -81,6 +81,9 @@
         "github-actions"
       ],
       "pinDigests": true,
+      "labels": [
+        "github-actions"
+      ],
       "automerge": true,
       "automergeType": "pr",
       "automergeStrategy": "squash"
@@ -89,6 +92,9 @@
       "groupName": "DevDependencies",
       "matchDepTypes": [
         "devDependencies"
+      ],
+      "labels": [
+        "dependencies"
       ],
       "automerge": false,
       "schedule": [
