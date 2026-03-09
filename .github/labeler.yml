@@ -1,49 +1,65 @@
 # yaml-language-server: $schema=https://www.schemastore.org/pull-request-labeler-5.json
-# Label PRs automatically based on changed files
-# Mapped to release.yml changelog categories for better release notes
+# Labels PRs based on file paths, branch names, and title patterns
+# Mapped to release.yml changelog categories
 
-# Breaking Changes
 breaking-change:
-  - changed-files:
-      - any-glob-to-any-file: ["src/index.ts", "src/lib/**/*.ts"]
-
-# Features
-Enhancement:
-  - changed-files:
-      - any-glob-to-any-file: ["src/tools/**/*.ts"]
+  - head-branch:
+      - pattern: ".*breaking.*"
+  - title:
+      - pattern: ".*!:.*"
 
 feature:
+  - title:
+      - pattern: '^feat(\(.+\))?:'
+  - head-branch:
+      - pattern: "feature/.*"
   - changed-files:
       - any-glob-to-any-file:
           - "src/**/*.ts"
-          - "!src/tools/**/*.ts"
-          - "!src/lib/**/*.ts"
-          - "!src/index.ts"
+          - "!src/**/*.test.ts"
 
-# Bug Fixes
-Bug:
+bug:
+  - title:
+      - pattern: '^fix(\(.+\))?:'
+  - head-branch:
+      - pattern: "fix/.*"
   - changed-files:
-      - any-glob-to-any-file: ["tests/**/*.ts"]
+      - any-glob-to-any-file:
+          - "tests/**/*.ts"
 
-# Documentation
-Documentation:
+documentation:
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.md"
           - "docs/**"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/pull_request_template.md"
 
-# Maintenance & Dependencies
+test:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**/*.ts"
+          - "**/*.test.ts"
+          - "**/*.spec.ts"
+          - "vitest.config.ts"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/labeler.yml"
+          - ".mega-linter.yml"
+
 maintenance:
   - changed-files:
       - any-glob-to-any-file:
           - "package.json"
-          - "tsconfig.json"
+          - "package-lock.json"
+          - "tsconfig*.json"
           - ".eslintrc.json"
           - ".prettier*"
           - ".gitignore"
           - ".gitattributes"
-          - ".gitmodules"
           - "renovate.json"
-          - ".github/workflows/**"
-          - ".mega-linter.yml"
           - "cspell.json"
+          - "GitVersion.yml"

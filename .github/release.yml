@@ -1,30 +1,30 @@
 changelog:
   categories:
-    - title: Breaking Changes 🚨
+    - title: ":boom: Breaking Changes"
       labels:
         - breaking-change
-        - Semver Major
-    - title: Features ✨
+    - title: ":sparkles: Features"
       labels:
         - feature
-        - Enhancement
-        - enhancement
-        - Semver Minor
-    - title: Bug Fixes 🐛
+    - title: ":bug: Bug Fixes"
       labels:
-        - Bug
         - bug
-        - Hotfix
-    - title: Documentation 📚
+        - hotfix
+    - title: ":technologist: Developer Experience"
       labels:
-        - Documentation
+        - ci
+        - test
+    - title: ":memo: Documentation"
+      labels:
         - documentation
-        - docs
-    - title: Maintenance 🔧
+    - title: ":wrench: Maintenance"
       labels:
         - maintenance
-        - dependencies
-        - Chore
-        - GitHub Actions
-        - Renovate
-        - Semver Patch
+        - refactor
+        - style
+  exclude:
+    labels:
+      - duplicate
+      - invalid
+      - wontfix
+      - ignore-for-release
