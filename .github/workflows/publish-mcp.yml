@@ -33,8 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Quality (PR and Schedule)
     permissions:
-      contents: read
+      contents: write
       checks: write
+      pull-requests: write
       security-events: write
 
     steps:
@@ -65,7 +66,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'schedule' }}
-          APPLY_FIXES: none
+          APPLY_FIXES: ${{ github.event_name == 'pull_request' && 'all' || 'none' }}
 
       - name: Upload MegaLinter reports
         if: success() || failure()
@@ -76,6 +77,12 @@ jobs:
           path: |
             megalinter-reports
             mega-linter.log
+
+      - name: Consolidate SARIF reports
+        if: success() || failure()
+        run: |
+          mkdir -p megalinter-reports/sarif
+          find megalinter-reports -maxdepth 1 -name '*.sarif' -exec cp {} megalinter-reports/sarif/ \;
 
       - name: Upload MegaLinter SARIF
         if: success() || failure()
