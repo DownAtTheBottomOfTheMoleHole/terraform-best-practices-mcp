@@ -101,7 +101,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      actions: write
 
     outputs:
       should_release: ${{ steps.release_check.outputs.should_release }}
