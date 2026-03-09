@@ -8,17 +8,22 @@ changelog:
       labels:
         - feature
         - Enhancement
+        - enhancement
         - Semver Minor
     - title: Bug Fixes 🐛
       labels:
         - Bug
+        - bug
         - Hotfix
     - title: Documentation 📚
       labels:
         - Documentation
+        - documentation
+        - docs
     - title: Maintenance 🔧
       labels:
         - maintenance
+        - dependencies
         - Chore
         - GitHub Actions
         - Renovate
