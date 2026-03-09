@@ -4,7 +4,7 @@
 
 [![CI/Publish](https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/actions/workflows/publish-mcp.yml/badge.svg)](https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/actions/workflows/publish-mcp.yml)
 [![Coverage](https://codecov.io/github/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/graph/badge.svg?branch=main)](https://codecov.io/github/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp)
-[![npm](https://img.shields.io/npm/v/@downatthebottomofthemolehole/terraform-best-practices-mcp-server.svg)](https://www.npmjs.com/package/@downatthebottomofthemolehole/terraform-best-practices-mcp-server)
+[![npm](https://img.shields.io/npm/v/@downatthebottomofthemolehole/terraform-best-practices-mcp-server.svg)](https://registry.npmjs.org/@downatthebottomofthemolehole/terraform-best-practices-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Node Version](https://img.shields.io/badge/node-%3E%3D24.14.0-brightgreen)](https://nodejs.org/)
 

@@ -40,7 +40,7 @@ SPELL_CSPELL_FILE_EXTENSIONS:
 
 SPELL_CSPELL_DISABLE_ERRORS: true
 
-SPELL_LYCHEE_FILTER_REGEX_EXCLUDE: (\.github/workflows/.*|package-lock\.json)
+SPELL_LYCHEE_FILTER_REGEX_EXCLUDE: (\.github/workflows/.*|package-lock\.json|\.markdown-link-check\.json)
 
 EXCLUDED_DIRECTORIES:
   - node_modules
