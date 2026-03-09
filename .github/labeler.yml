@@ -48,4 +48,3 @@ maintenance:
           - ".github/workflows/**"
           - ".mega-linter.yml"
           - "cspell.json"
-
