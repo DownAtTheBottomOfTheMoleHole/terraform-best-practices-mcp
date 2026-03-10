@@ -265,7 +265,7 @@ Inputs:
 
 ## Prompt Cookbook
 
-Use these minimal prompts in Copilot Chat with `@tf-best-practices`. CLI tools default to the current workspace root when no path is given. If you add a file or folder as Copilot context (`#file` or `#folder`), reference it in your prompt and the tool will target that path.
+Use these minimal prompts in Copilot Chat with `@tf-best-practices`. CLI tools default to the current workspace root when no `path` is provided. Adding `#file` or `#folder` context can improve chat understanding, but tool execution path is controlled by explicit tool inputs (for example, `path`).
 
 ### Quick Start (Zero-Argument Prompts)
 
