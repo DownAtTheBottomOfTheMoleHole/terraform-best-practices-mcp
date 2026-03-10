@@ -1,21 +1,23 @@
 changelog:
   categories:
-    - title: Breaking Changes 🚨
+    - title: ":boom: Breaking Changes"
       labels:
         - breaking-change
-    - title: Features ✨
+    - title: ":sparkles: Features"
       labels:
-        - enhancement
         - feature
-    - title: Bug Fixes 🐛
+    - title: ":bug: Bug Fixes"
       labels:
         - bug
-    - title: Documentation 📚
+        - hotfix
+    - title: ":memo: Documentation"
       labels:
         - documentation
-        - docs
-    - title: Maintenance 🔧
+    - title: ":wrench: Maintenance"
       labels:
         - maintenance
-        - dependencies
-        - Renovate
+  exclude:
+    labels:
+      - duplicate
+      - invalid
+      - wontfix

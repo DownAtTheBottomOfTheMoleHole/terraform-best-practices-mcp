@@ -27,7 +27,7 @@ This document describes repeatable tests for the Terraform Best Practices MCP se
 
 ## Copilot Chat Validation
 
-Use your configured server alias in Copilot Chat (for example `@terraform-best-practices-mcp`).
+Use your configured server alias in Copilot Chat (for example `@tf-best-practices`; aliases are user-configurable).
 
 ### Test 1: Analyze Terraform code quality
 

@@ -1,9 +1,12 @@
 {
   "servers": {
-    "terraform-best-practices-mcp": {
+    "tf-best-practices": {
       "type": "stdio",
       "command": "npm",
-      "args": ["run", "dev"]
+      "args": [
+        "run",
+        "dev"
+      ]
     }
   }
 }

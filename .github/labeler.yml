@@ -1,57 +1,54 @@
-# Label PRs automatically based on changed files
-# Mapped to release.yml changelog categories for better release notes
+# yaml-language-server: $schema=https://www.schemastore.org/pull-request-labeler-5.json
+# Labels PRs based on file paths, branch names, and title patterns
+# Mapped to release.yml changelog categories
 
-# Breaking Changes
 breaking-change:
-  - changed-files:
-      - any-glob-to-any-file: ["src/index.ts", "src/lib/**/*.ts"]
-
-# Features
-enhancement:
-  - changed-files:
-      - any-glob-to-any-file: ["src/tools/**/*.ts"]
+  - head-branch:
+      - pattern: ".*breaking.*"
+  - title:
+      - pattern: ".*!:.*"
 
 feature:
+  - title:
+      - pattern: '^feat(\(.+\))?:'
+  - head-branch:
+      - pattern: "feature/.*"
   - changed-files:
       - any-glob-to-any-file:
           - "src/**/*.ts"
-          - "!src/tools/**/*.ts"
-          - "!src/lib/**/*.ts"
-          - "!src/index.ts"
+          - "!src/**/*.test.ts"
 
-# Bug Fixes
 bug:
-  - changed-files:
-      - any-glob-to-any-file: ["tests/**/*.ts"]
+  - title:
+      - pattern: '^fix(\(.+\))?:'
+  - head-branch:
+      - pattern: "fix/.*"
 
-# Documentation
 documentation:
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.md"
           - "docs/**"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/pull_request_template.md"
 
-# (Alias `docs` is handled in release.yml; no separate auto-label configuration needed here.)
-
-# Maintenance & Dependencies
 maintenance:
   - changed-files:
       - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/labeler.yml"
+          - ".mega-linter.yml"
+          - "tests/**/*.ts"
+          - "**/*.test.ts"
+          - "**/*.spec.ts"
+          - "vitest.config.ts"
           - "package.json"
-          - "tsconfig.json"
+          - "package-lock.json"
+          - "tsconfig*.json"
           - ".eslintrc.json"
           - ".prettier*"
           - ".gitignore"
           - ".gitattributes"
-          - ".gitmodules"
           - "renovate.json"
-          - ".github/workflows/**"
-          - ".mega-linter.yml"
           - "cspell.json"
-
-# Dependencies (alias used in release.yml)
-dependencies:
-  - changed-files:
-      - any-glob-to-any-file:
-          - "package.json"
-          - "package-lock.json"
+          - "GitVersion.yml"
