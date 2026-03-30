@@ -6,7 +6,7 @@ on:
 
 jobs:
   label:
-    if: github.event.pull_request.head.repo.fork == false
+    if: github.event.pull_request.head.repo.fork == false && github.actor != 'renovate[bot]'
     runs-on: ubuntu-latest
     name: Auto-label PR
     permissions:
@@ -28,12 +28,12 @@ jobs:
       - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
-            const labels = ['Renovate', 'maintenance'];
+            const labels = ['Renovate'];
             const title = (context.payload.pull_request?.title || '').toLowerCase();
 
-            if (title.includes('major') || title.includes('major version')) {
+            if (/\(major\)/.test(title)) {
               labels.push('Semver Major');
-            } else if (title.includes('minor') || title.includes('minor version')) {
+            } else if (/\(minor\)/.test(title)) {
               labels.push('Semver Minor');
             } else {
               labels.push('Semver Patch');

@@ -13,10 +13,6 @@ feature:
       - pattern: '^feat(\(.+\))?:'
   - head-branch:
       - pattern: "feature/.*"
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/**/*.ts"
-          - "!src/**/*.test.ts"
 
 bug:
   - title:
