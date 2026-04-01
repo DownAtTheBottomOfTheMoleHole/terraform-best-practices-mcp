@@ -29,15 +29,6 @@ jobs:
         with:
           script: |
             const labels = ['Renovate', 'maintenance'];
-            const title = (context.payload.pull_request?.title || '').toLowerCase();
-
-            if (title.includes('major') || title.includes('major version')) {
-              labels.push('Semver Major');
-            } else if (title.includes('minor') || title.includes('minor version')) {
-              labels.push('Semver Minor');
-            } else {
-              labels.push('Semver Patch');
-            }
 
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
