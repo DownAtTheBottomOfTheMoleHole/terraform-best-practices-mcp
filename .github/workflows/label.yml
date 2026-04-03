@@ -6,7 +6,7 @@ on:
 
 jobs:
   label:
-    if: github.event.pull_request.head.repo.fork == false
+    if: github.event.pull_request.head.repo.fork == false && github.event.pull_request.user.login != 'renovate[bot]'
     runs-on: ubuntu-latest
     name: Auto-label PR
     permissions:
@@ -21,14 +21,23 @@ jobs:
   renovate-label:
     runs-on: ubuntu-latest
     name: Label Renovate PR
-    if: github.actor == 'renovate[bot]' && github.event.pull_request.head.repo.fork == false
+    if: github.event.pull_request.user.login == 'renovate[bot]' && github.event.pull_request.head.repo.fork == false
     permissions:
       issues: write
     steps:
       - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
-            const labels = ['Renovate', 'maintenance'];
+            const labels = ['Renovate'];
+            const title = (context.payload.pull_request?.title || '').toLowerCase();
+
+            if (/\(major\)/.test(title)) {
+              labels.push('Semver Major');
+            } else if (/\(minor\)/.test(title)) {
+              labels.push('Semver Minor');
+            } else {
+              labels.push('Semver Patch');
+            }
 
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
