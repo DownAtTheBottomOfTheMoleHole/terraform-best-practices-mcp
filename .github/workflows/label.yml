@@ -6,7 +6,7 @@ on:
 
 jobs:
   label:
-    if: github.event.pull_request.head.repo.fork == false && github.actor != 'renovate[bot]'
+    if: github.event.pull_request.head.repo.fork == false && github.event.pull_request.user.login != 'renovate[bot]'
     runs-on: ubuntu-latest
     name: Auto-label PR
     permissions:
@@ -21,7 +21,7 @@ jobs:
   renovate-label:
     runs-on: ubuntu-latest
     name: Label Renovate PR
-    if: github.actor == 'renovate[bot]' && github.event.pull_request.head.repo.fork == false
+    if: github.event.pull_request.user.login == 'renovate[bot]' && github.event.pull_request.head.repo.fork == false
     permissions:
       issues: write
     steps:
