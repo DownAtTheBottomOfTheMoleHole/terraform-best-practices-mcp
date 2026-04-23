@@ -39,7 +39,7 @@
     "url": "https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/issues"
   },
   "engines": {
-    "node": ">=24.14.1"
+    "node": ">=24.15.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
