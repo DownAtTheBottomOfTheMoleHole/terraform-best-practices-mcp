@@ -339,7 +339,7 @@ jobs:
           echo "value=$PREVIOUS_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Generate rich public release notes
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
           VERSION: ${{ steps.release_version.outputs.value }}
           PREVIOUS_TAG: ${{ steps.previous_tag.outputs.value }}
@@ -397,7 +397,7 @@ jobs:
             fs.writeFileSync('release-notes.md', body, 'utf8');
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3
         with:
           tag_name: v${{ steps.release_version.outputs.value }}
           name: v${{ steps.release_version.outputs.value }}
