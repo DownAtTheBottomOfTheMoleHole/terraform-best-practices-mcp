@@ -53,7 +53,7 @@
     "docs:links": "npx --yes markdown-link-check -c .markdown-link-check.json README.md docs/*.md"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.27.1",
+    "@modelcontextprotocol/sdk": "1.29.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
