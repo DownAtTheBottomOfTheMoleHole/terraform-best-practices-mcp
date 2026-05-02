@@ -2,8 +2,6 @@
 
 ![Down At The Bottom Of The Mole Hole banner](.assets/org-banner.png)
 
-![Down At The Bottom Of The Mole Hole icon](.assets/org-logo.png)
-
 <!-- mcp-name: io.github.DownAtTheBottomOfTheMoleHole/terraform-best-practices -->
 
 [![CI/Publish](https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/actions/workflows/publish-mcp.yml/badge.svg)](https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/actions/workflows/publish-mcp.yml)
