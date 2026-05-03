@@ -124,7 +124,7 @@ export const analyzeTerraformCodeTool: ToolDefinition<AnalyzeTerraformCodeInput>
   inputSchema: analyzeTerraformCodeInputSchema,
   inputSchemaJson: analyzeTerraformCodeInputJsonSchema,
   run: async (input) => {
-    let suggestions: string[] = [];
+    let suggestions: string[];
 
     switch (input.focusArea) {
       case "modularity":
