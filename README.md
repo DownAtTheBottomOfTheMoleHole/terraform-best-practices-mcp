@@ -1,5 +1,7 @@
 # Terraform Best Practices MCP Server
 
+![Down At The Bottom Of The Mole Hole banner](.assets/org-banner.png)
+
 <!-- mcp-name: io.github.DownAtTheBottomOfTheMoleHole/terraform-best-practices -->
 
 [![CI/Publish](https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/actions/workflows/publish-mcp.yml/badge.svg)](https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/actions/workflows/publish-mcp.yml)
