@@ -50,8 +50,69 @@ export const analyzeStateManagementInputJsonSchema: Record<string, unknown> = {
 
 type Backend = "s3" | "azurerm" | "gcs" | "remote" | "local" | "unknown";
 
+function extractS3BackendBody(terraformCode: string): string {
+  const backendStart = terraformCode.match(/backend\s+"s3"\s*{/i);
+  if (!backendStart || backendStart.index === undefined) {
+    return "";
+  }
+
+  const startIndex = terraformCode.indexOf("{", backendStart.index);
+  if (startIndex < 0) {
+    return "";
+  }
+
+  let depth = 1;
+  for (let index = startIndex + 1; index < terraformCode.length; index += 1) {
+    const char = terraformCode[index];
+    if (char === "{") {
+      depth += 1;
+    }
+    if (char === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        return terraformCode.slice(startIndex + 1, index);
+      }
+    }
+  }
+
+  return "";
+}
+
+function extractBooleanAssignment(code: string, key: string): boolean | undefined {
+  for (const line of code.split(/\r?\n/)) {
+    const withoutComment = line.split("#")[0].split("//")[0].trim();
+    if (!withoutComment.startsWith(`${key} =`)) {
+      continue;
+    }
+
+    const value = withoutComment.slice(withoutComment.indexOf("=") + 1).trim().toLowerCase();
+    if (value === "true") {
+      return true;
+    }
+    if (value === "false") {
+      return false;
+    }
+  }
+
+  return undefined;
+}
+
 function hasS3Locking(terraformCode: string): boolean {
-  return /dynamodb_table\s*=/i.test(terraformCode) || /use_lockfile\s*=\s*true\b/i.test(terraformCode);
+  const backendBody = extractS3BackendBody(terraformCode);
+  if (!backendBody) {
+    return false;
+  }
+
+  return extractBooleanAssignment(backendBody, "use_lockfile") === true || /\bdynamodb_table\s*=/i.test(backendBody);
+}
+
+function hasS3Encryption(terraformCode: string): boolean {
+  const backendBody = extractS3BackendBody(terraformCode);
+  if (!backendBody) {
+    return false;
+  }
+
+  return extractBooleanAssignment(backendBody, "encrypt") === true;
 }
 
 function inferBackend(terraformCode: string): Backend {
@@ -97,7 +158,7 @@ function getRiskLevel(
     score += 2;
   }
 
-  if (/backend\s+"s3"/i.test(terraformCode) && !/encrypt\s*=\s*true/i.test(terraformCode)) {
+  if (/backend\s+"s3"/i.test(terraformCode) && !hasS3Encryption(terraformCode)) {
     score += 1;
   }
 
@@ -119,7 +180,7 @@ function getBackendSpecificGuidance(backend: Backend, code: string): string[] {
       if (!hasS3Locking(code)) {
         guidance.push("Enable state locking for S3 backend using DynamoDB or lockfile support.");
       }
-      if (!/encrypt\s*=\s*true/i.test(code)) {
+      if (!hasS3Encryption(code)) {
         guidance.push("Enable S3 backend encryption and enforce bucket-level encryption defaults.");
       }
       guidance.push("Limit state bucket access with least-privilege IAM and dedicated roles.");
