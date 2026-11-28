@@ -2,8 +2,10 @@ import { z } from "zod";
 import type { CommandExecutionResult } from "../lib/exec.js";
 
 export const commandToolInputSchema = z.object({
-  path: z.string().min(1).default("."),
-  extraArgs: z.array(z.string().min(1)).max(50).default([]),
+  path: z.string().min(1).refine((value) => !value.startsWith("-")).default("."),
+  extraArgs: z.array(
+    z.string().min(1).refine((value) => !value.startsWith("-"))
+  ).max(50).default([]),
   timeoutMs: z.number().int().positive().max(600_000).optional()
 });
 
@@ -14,7 +16,7 @@ export const commandToolInputJsonSchema: Record<string, unknown> = {
   properties: {
     path: {
       type: "string",
-      description: "Terraform project path to scan.",
+      description: "Terraform project path to scan. Must not start with '-'.",
       default: "."
     },
     extraArgs: {
@@ -22,7 +24,7 @@ export const commandToolInputJsonSchema: Record<string, unknown> = {
       items: {
         type: "string"
       },
-      description: "Extra CLI arguments.",
+      description: "Extra positional CLI arguments. Values starting with '-' are rejected.",
       default: []
     },
     timeoutMs: {
