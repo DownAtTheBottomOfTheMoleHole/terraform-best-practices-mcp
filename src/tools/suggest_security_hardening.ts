@@ -29,8 +29,14 @@ export const suggestSecurityHardeningInputJsonSchema: Record<string, unknown> = 
 function generateHardeningSteps(scanOutput: string): string[] {
   const suggestions: string[] = [];
 
-  if (scanOutput.includes("FAILED") || scanOutput.includes("failed")) {
-    const failCount = (scanOutput.match(/FAILED|failed/gi) || []).length;
+  const failCountMatch = scanOutput.match(
+    /failed checks?\s*:\s*(\d+)|checks failed\s*:\s*(\d+)|failures?\s*:\s*(\d+)|\bfailed\s*:\s*(\d+)/i
+  );
+  const failCount = failCountMatch
+    ? Number.parseInt(failCountMatch.slice(1).find((value) => value !== undefined) ?? "0", 10)
+    : (scanOutput.match(/\bFAILED\b|\bfailed\b/g) || []).length;
+
+  if (failCount > 0) {
     suggestions.push(`⚠ Found ${failCount} failed checks; prioritize by severity level.`);
   }
 

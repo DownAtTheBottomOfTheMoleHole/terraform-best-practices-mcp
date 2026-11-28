@@ -12,4 +12,10 @@ describe("toPlainText", () => {
     expect(output).not.toContain("alert");
     expect(output).not.toContain("color:red");
   });
+
+  it("decodes ampersand entities last to avoid double-unescaping", () => {
+    const output = toPlainText("&amp;quot; &amp;#39;");
+
+    expect(output).toBe("&quot; &#39;");
+  });
 });

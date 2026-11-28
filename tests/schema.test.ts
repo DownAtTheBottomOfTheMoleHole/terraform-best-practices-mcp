@@ -12,6 +12,13 @@ describe("tool schemas", () => {
     expect(parsed.timeoutMs).toBeUndefined();
   });
 
+  it("rejects option-like path and extra args for command tools", () => {
+    expect(commandToolInputSchema.safeParse({ path: "--help" }).success).toBe(false);
+    expect(commandToolInputSchema.safeParse({ extraArgs: ["--external-checks-git"] }).success).toBe(
+      false
+    );
+  });
+
   it("accepts only azure/aws/gcp for provider guidance", () => {
     expect(fetchProviderBestPracticesInputSchema.safeParse({ provider: "aws" }).success).toBe(true);
     expect(fetchProviderBestPracticesInputSchema.safeParse({ provider: "oracle" }).success).toBe(

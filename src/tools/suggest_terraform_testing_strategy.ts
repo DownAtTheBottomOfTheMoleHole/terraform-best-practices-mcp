@@ -65,9 +65,9 @@ function analyzeSignals(terraformCode?: string): CodeSignals {
   }
 
   return {
-    resourceCount: (terraformCode.match(/^\s*resource\s+"/gm) || []).length,
-    moduleCount: (terraformCode.match(/^\s*module\s+"/gm) || []).length,
-    hasDataSources: /^\s*data\s+"/gim.test(terraformCode)
+    resourceCount: (terraformCode.match(/^[ \t]*resource\s+"/gm) || []).length,
+    moduleCount: (terraformCode.match(/^[ \t]*module\s+"/gm) || []).length,
+    hasDataSources: /^[ \t]*data\s+"/gim.test(terraformCode)
   };
 }
 

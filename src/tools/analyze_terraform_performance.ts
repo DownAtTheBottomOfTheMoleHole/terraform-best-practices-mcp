@@ -51,9 +51,9 @@ interface PerformanceMetrics {
 
 function collectMetrics(code: string): PerformanceMetrics {
   return {
-    resourceCount: (code.match(/^\s*resource\s+"/gm) || []).length,
-    moduleCount: (code.match(/^\s*module\s+"/gm) || []).length,
-    dataSourceCount: (code.match(/^\s*data\s+"/gm) || []).length,
+    resourceCount: (code.match(/^[ \t]*resource\s+"/gm) || []).length,
+    moduleCount: (code.match(/^[ \t]*module\s+"/gm) || []).length,
+    dataSourceCount: (code.match(/^[ \t]*data\s+"/gm) || []).length,
     dependsOnCount: (code.match(/depends_on\s*=\s*\[/g) || []).length,
     forEachCount: (code.match(/for_each\s*=/g) || []).length,
     countCount: (code.match(/\bcount\s*=/g) || []).length,

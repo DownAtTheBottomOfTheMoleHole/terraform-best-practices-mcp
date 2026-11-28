@@ -42,15 +42,49 @@ interface ComplianceStatus {
   warnings: number;
 }
 
+function extractFirstCount(output: string, patterns: RegExp[]): number | undefined {
+  for (const pattern of patterns) {
+    const match = output.match(pattern);
+    if (!match) {
+      continue;
+    }
+
+    const value = Number.parseInt(match[1], 10);
+    if (Number.isFinite(value)) {
+      return value;
+    }
+  }
+
+  return undefined;
+}
+
 function extractComplianceMetrics(output?: string): ComplianceStatus {
   if (!output) {
     return { passed: 0, failed: 0, skipped: 0, warnings: 0 };
   }
 
-  const passed = (output.match(/passed|PASSED|check passed/gi) || []).length;
-  const failed = (output.match(/failed|FAILED|check failed/gi) || []).length;
-  const skipped = (output.match(/skipped|SKIPPED/gi) || []).length;
-  const warnings = (output.match(/warning|WARNING|warn/gi) || []).length;
+  const passed = extractFirstCount(output, [
+    /passed checks?\s*:\s*(\d+)/i,
+    /checks passed\s*:\s*(\d+)/i,
+    /\bpassed\s*:\s*(\d+)/i
+  ]) ?? (output.match(/\bpassed\b|\bcheck passed\b/gi) || []).length;
+
+  const failed = extractFirstCount(output, [
+    /failed checks?\s*:\s*(\d+)/i,
+    /checks failed\s*:\s*(\d+)/i,
+    /failures?\s*:\s*(\d+)/i,
+    /\bfailed\s*:\s*(\d+)/i
+  ]) ?? (output.match(/\bfailed\b|\bcheck failed\b/gi) || []).length;
+
+  const skipped = extractFirstCount(output, [
+    /skipped checks?\s*:\s*(\d+)/i,
+    /checks skipped\s*:\s*(\d+)/i,
+    /\bskipped\s*:\s*(\d+)/i
+  ]) ?? (output.match(/\bskipped\b/gi) || []).length;
+
+  const warnings = extractFirstCount(output, [
+    /warnings?\s*:\s*(\d+)/i
+  ]) ?? (output.match(/\bwarning\b|\bwarn\b/gi) || []).length;
 
   return { passed, failed, skipped, warnings };
 }
