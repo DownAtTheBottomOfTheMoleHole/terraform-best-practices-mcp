@@ -50,6 +50,10 @@ export const analyzeStateManagementInputJsonSchema: Record<string, unknown> = {
 
 type Backend = "s3" | "azurerm" | "gcs" | "remote" | "local" | "unknown";
 
+function hasS3Locking(terraformCode: string): boolean {
+  return /dynamodb_table\s*=/i.test(terraformCode) || /use_lockfile\s*=\s*true\b/i.test(terraformCode);
+}
+
 function inferBackend(terraformCode: string): Backend {
   const backendMatch = terraformCode.match(/backend\s+"([a-z0-9_-]+)"/i);
   if (!backendMatch) {
@@ -89,7 +93,7 @@ function getRiskLevel(
     score += 1;
   }
 
-  if (/backend\s+"s3"/i.test(terraformCode) && !/dynamodb_table\s*=|use_lockfile\s*=/i.test(terraformCode)) {
+  if (/backend\s+"s3"/i.test(terraformCode) && !hasS3Locking(terraformCode)) {
     score += 2;
   }
 
@@ -112,7 +116,7 @@ function getBackendSpecificGuidance(backend: Backend, code: string): string[] {
   switch (backend) {
     case "s3": {
       const guidance: string[] = [];
-      if (!/dynamodb_table\s*=|use_lockfile\s*=/i.test(code)) {
+      if (!hasS3Locking(code)) {
         guidance.push("Enable state locking for S3 backend using DynamoDB or lockfile support.");
       }
       if (!/encrypt\s*=\s*true/i.test(code)) {

@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { analyzeStateManagementTool } from "../src/tools/analyze_state_management.js";
 import { analyzeTerraformPerformanceTool } from "../src/tools/analyze_terraform_performance.js";
+import { generateComplianceSummaryTool } from "../src/tools/generate_compliance_summary.js";
 import { generateTerraformModuleDocsTool } from "../src/tools/generate_terraform_module_docs.js";
 import { recommendTerraformModulesTool } from "../src/tools/recommend_terraform_modules.js";
+import { suggestSecurityHardeningTool } from "../src/tools/suggest_security_hardening.js";
 import { suggestTerraformArchitectureTool } from "../src/tools/suggest_terraform_architecture.js";
 import { suggestTerraformTestingStrategyTool } from "../src/tools/suggest_terraform_testing_strategy.js";
 
@@ -106,6 +108,50 @@ describe("interactive tools", () => {
 
     expect(output).toContain("# Terraform State Management Analysis");
     expect(output).toContain("## Risk Level");
+  });
+
+  it("flags missing S3 locking when use_lockfile is false", async () => {
+    const output = await analyzeStateManagementTool.run({
+      terraformCode: `
+terraform {
+  backend "s3" {
+    bucket = "state"
+    key = "prod.tfstate"
+    region = "us-east-1"
+    use_lockfile = false
+    encrypt = true
+  }
+}
+      `,
+      teamSize: 6,
+      environmentCount: 2,
+      currentBackend: "auto",
+      useWorkspaces: false
+    });
+
+    expect(output).toContain("Enable state locking for S3 backend");
+  });
+
+  it("uses numeric scanner totals for compliance summary", async () => {
+    const output = await generateComplianceSummaryTool.run({
+      checkovOutput: "Passed checks: 400, Failed checks: 200, Skipped checks: 0",
+      trivyOutput: "Summary\nFailures: 5\nWarnings: 2",
+      complianceFramework: "general"
+    });
+
+    expect(output).toContain("- **Checks Passed:** 400");
+    expect(output).toContain("- **Checks Failed:** 205");
+    expect(output).toContain("- **Warnings:** 2");
+  });
+
+  it("detects standard failed-check wording in hardening suggestions", async () => {
+    const output = await suggestSecurityHardeningTool.run({
+      scanOutput: "Passed checks: 5, Failed checks: 100, Skipped checks: 0",
+      scanTool: "checkov"
+    });
+
+    expect(output).toContain("Found 100 failed checks");
+    expect(output).not.toContain("No obvious security issues detected");
   });
 
   it("generates terraform module docs markdown", async () => {

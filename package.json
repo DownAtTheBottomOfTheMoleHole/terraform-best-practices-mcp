@@ -39,7 +39,7 @@
     "url": "https://github.com/DownAtTheBottomOfTheMoleHole/terraform-best-practices-mcp/issues"
   },
   "engines": {
-    "node": ">=26.13.0"
+    "node": ">=26.13.1"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -53,16 +53,16 @@
     "docs:links": "npx --yes markdown-link-check -c .markdown-link-check.json README.md docs/*.md"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.32.0",
+    "@modelcontextprotocol/sdk": "1.32.2",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^25.9.9",
-    "@typescript-eslint/eslint-plugin": "^8.72.1",
-    "@typescript-eslint/parser": "^8.72.1",
+    "@types/node": "^25.9.12",
+    "@typescript-eslint/eslint-plugin": "^8.74.0",
+    "@typescript-eslint/parser": "^8.74.0",
     "@vitest/coverage-v8": "^4.1.12",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "tsx": "4.23.15",
     "typescript": "^6.0.3",
     "vitest": "^4.1.12"
