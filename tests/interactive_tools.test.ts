@@ -154,6 +154,25 @@ terraform {
     expect(output).not.toContain("No obvious security issues detected");
   });
 
+  it("counts Trivy JSON FAIL statuses in hardening suggestions", async () => {
+    const output = await suggestSecurityHardeningTool.run({
+      scanOutput: JSON.stringify({
+        Results: [
+          {
+            Misconfigurations: [
+              { ID: "A", Status: "FAIL" },
+              { ID: "B", Status: "FAIL" }
+            ]
+          }
+        ]
+      }),
+      scanTool: "trivy"
+    });
+
+    expect(output).toContain("Found 2 failed checks");
+    expect(output).not.toContain("No obvious security issues detected");
+  });
+
   it("generates terraform module docs markdown", async () => {
     const output = await generateTerraformModuleDocsTool.run({
       terraformCode: sampleTerraformCode,
@@ -166,5 +185,28 @@ terraform {
     expect(output).toContain("## Inputs");
     expect(output).toContain("## Outputs");
     expect(output).toContain("## Usage Example");
+  });
+
+  it("does not treat commented lockfile text as S3 locking enabled", async () => {
+    const output = await analyzeStateManagementTool.run({
+      terraformCode: `
+terraform {
+  backend "s3" {
+    bucket = "state"
+    key = "prod.tfstate"
+    region = "us-east-1"
+    # use_lockfile = true
+    use_lockfile = false
+    encrypt = true
+  }
+}
+      `,
+      teamSize: 6,
+      environmentCount: 2,
+      currentBackend: "auto",
+      useWorkspaces: false
+    });
+
+    expect(output).toContain("Enable state locking for S3 backend");
   });
 });

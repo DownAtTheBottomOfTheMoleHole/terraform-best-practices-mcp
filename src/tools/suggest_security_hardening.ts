@@ -26,15 +26,47 @@ export const suggestSecurityHardeningInputJsonSchema: Record<string, unknown> = 
   additionalProperties: false
 };
 
-function generateHardeningSteps(scanOutput: string): string[] {
+function countTrivyFailuresFromJson(scanOutput: string): number {
+  try {
+    const parsed = JSON.parse(scanOutput) as unknown;
+    let failures = 0;
+    const queue: unknown[] = [parsed];
+
+    while (queue.length > 0) {
+      const current = queue.pop();
+      if (!current || typeof current !== "object") {
+        continue;
+      }
+      const entry = current as Record<string, unknown>;
+
+      if (entry.Status === "FAIL") {
+        failures += 1;
+      }
+
+      for (const value of Object.values(entry)) {
+        if (value && typeof value === "object") {
+          queue.push(value);
+        }
+      }
+    }
+
+    return failures;
+  } catch {
+    return 0;
+  }
+}
+
+function generateHardeningSteps(scanOutput: string, scanTool: SuggestSecurityHardeningInput["scanTool"]): string[] {
   const suggestions: string[] = [];
+  const trivyJsonFailures = scanTool === "trivy" ? countTrivyFailuresFromJson(scanOutput) : 0;
 
   const failCountMatch = scanOutput.match(
     /failed checks?\s*:\s*(\d+)|checks failed\s*:\s*(\d+)|failures?\s*:\s*(\d+)|\bfailed\s*:\s*(\d+)/i
   );
-  const failCount = failCountMatch
+  const textFailCount = failCountMatch
     ? Number.parseInt(failCountMatch.slice(1).find((value) => value !== undefined) ?? "0", 10)
     : (scanOutput.match(/\bFAILED\b|\bfailed\b/g) || []).length;
+  const failCount = Math.max(textFailCount, trivyJsonFailures);
 
   if (failCount > 0) {
     suggestions.push(`⚠ Found ${failCount} failed checks; prioritize by severity level.`);
@@ -77,7 +109,7 @@ export const suggestSecurityHardeningTool: ToolDefinition<SuggestSecurityHardeni
   inputSchema: suggestSecurityHardeningInputSchema,
   inputSchemaJson: suggestSecurityHardeningInputJsonSchema,
   run: async (input) => {
-    const steps = generateHardeningSteps(input.scanOutput);
+    const steps = generateHardeningSteps(input.scanOutput, input.scanTool);
 
     const lines: string[] = [
       "# Security Hardening Recommendations",

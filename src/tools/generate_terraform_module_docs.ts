@@ -98,13 +98,21 @@ function extractNamedBlocks(code: string, blockType: string): NamedBlock[] {
 }
 
 function extractAttribute(body: string, key: string): string | undefined {
-  const pattern = new RegExp(`^\\s*${key}\\s*=\\s*(.+)$`, "m");
-  const match = body.match(pattern);
-  if (!match) {
-    return undefined;
+  for (const line of body.split(/\r?\n/)) {
+    const trimmed = line.trimStart();
+    const equalsIndex = trimmed.indexOf("=");
+    if (equalsIndex < 0) {
+      continue;
+    }
+
+    if (trimmed.slice(0, equalsIndex).trim() !== key) {
+      continue;
+    }
+
+    return trimmed.slice(equalsIndex + 1).trim();
   }
 
-  return match[1].trim();
+  return undefined;
 }
 
 function normalizeQuoted(value?: string): string {

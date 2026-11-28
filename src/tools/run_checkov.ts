@@ -1,4 +1,7 @@
 import { CommandNotFoundError, runCommand } from "../lib/exec.js";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import {
   commandToolInputJsonSchema,
   commandToolInputSchema,
@@ -17,16 +20,25 @@ export const runCheckovTool: ToolDefinition<RunCheckovInput> = {
   inputSchema: runCheckovInputSchema,
   inputSchemaJson: commandToolInputJsonSchema,
   run: async (input) => {
+    const tempConfigDir = await mkdtemp(path.join(os.tmpdir(), "checkov-config-"));
+    const trustedConfigPath = path.join(tempConfigDir, ".checkov.yaml");
     try {
-      const result = await runCommand("checkov", ["-d", input.path, ...input.extraArgs], {
-        timeoutMs: input.timeoutMs
-      });
+      await writeFile(trustedConfigPath, "{}\n", "utf8");
+      const result = await runCommand(
+        "checkov",
+        ["-d", input.path, "--config-file", trustedConfigPath, ...input.extraArgs],
+        {
+          timeoutMs: input.timeoutMs
+        }
+      );
       return formatCommandExecution(result);
     } catch (error) {
       if (error instanceof CommandNotFoundError) {
         return missingCliMessage("checkov");
       }
       throw error;
+    } finally {
+      await rm(tempConfigDir, { recursive: true, force: true });
     }
   }
 };

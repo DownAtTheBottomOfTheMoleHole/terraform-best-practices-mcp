@@ -1,4 +1,7 @@
 import { CommandNotFoundError, runCommand } from "../lib/exec.js";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import {
   commandToolInputJsonSchema,
   commandToolInputSchema,
@@ -17,8 +20,11 @@ export const runTflintTool: ToolDefinition<RunTflintInput> = {
   inputSchema: runTflintInputSchema,
   inputSchemaJson: commandToolInputJsonSchema,
   run: async (input) => {
+    const tempConfigDir = await mkdtemp(path.join(os.tmpdir(), "tflint-config-"));
+    const trustedConfigPath = path.join(tempConfigDir, ".tflint.hcl");
     try {
-      const result = await runCommand("tflint", [...input.extraArgs], {
+      await writeFile(trustedConfigPath, "", "utf8");
+      const result = await runCommand("tflint", ["--config", trustedConfigPath, ...input.extraArgs], {
         cwd: input.path,
         timeoutMs: input.timeoutMs
       });
@@ -28,6 +34,8 @@ export const runTflintTool: ToolDefinition<RunTflintInput> = {
         return missingCliMessage("tflint");
       }
       throw error;
+    } finally {
+      await rm(tempConfigDir, { recursive: true, force: true });
     }
   }
 };
